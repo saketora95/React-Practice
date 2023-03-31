@@ -26,10 +26,15 @@
 3. 於終端機透過指令 `serve -s build` 測試部屬
 
 # 與他人協作
-
+1. 避免將 `node_modules` 交付給他人
+   - `node_modules` 資料夾中，儲存了下載來的套件，因此將整個資料夾交付給他人的話，相當冗贅。
+2. 透過 `package-lock.json` 讓對方自行下載必要套件
+   - 同一目錄下的 `package-lock.json` 檔案，當中記錄了所下載的套件，將這個檔案交付給他人，並請對方自行下載，會便利許多。
+   - 於終端機透過指令 `npm i` 即可安裝所需套件。
 
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214945) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
-3. 123# React-Practice
-# React-Practice
+
+# 目前進度
+[【React.js入門 - 03】 開始之前應該要知道的DOM和ES6 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10215265)
