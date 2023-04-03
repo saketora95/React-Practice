@@ -32,9 +32,47 @@
    - 同一目錄下的 `package-lock.json` 檔案，當中記錄了所下載的套件，將這個檔案交付給他人，並請對方自行下載，會便利許多。
    - 於終端機透過指令 `npm i` 即可安裝所需套件。
 
+# ES6 筆記
+1. 以 `宣告型態 函式名稱 = (參數) => {}` 宣告函數的方式
+```
+var testFunction = (A, B) => {
+    return A + B;
+}
+```
+2. 以 `...arg` 宣告函數參數的話，呼叫函數時所使用的參數會變為 `Array`
+   - 直接使用 `arg` 的話，會是 `Array` 的型態。
+   - 使用 `...arg` 的話，會將參數展開。
+```
+var testFunction = (...arg) => {
+    console.log(arg)
+    console.log(...arg)
+}
+```
+3. 非同步特性與 Promise
+   - JavaScript 執行兩個或多個函數時，不會等待其他函數執行完畢，也就是說即便先執行 A 再執行 B，也可能會出現 B 函數比較早結束的狀況。
+   - 使用 Promise 可以確保函數執行完後才會轉入特定的函數。
+```
+var testFunction = new Promise((resolve, reject) => {
+    先行處理的項目 ...
+    resolve(arg);
+})
+
+testFunction
+.then((arg) => {
+    testFunction 完成之後執行的項目 ...
+})
+.catch((err) => {
+    testFunction 出現錯誤時執行的項目 ...
+}))
+```
+
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214945) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
 
 # 目前進度
-[【React.js入門 - 03】 開始之前應該要知道的DOM和ES6 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10215265)
+https://ithelp.ithome.com.tw/articles/10215841
+
+# 更新記錄
+1. 2023-03-31 : 初步建立。
+2. 2023-04-03 : 修正首頁顯示錯誤的問題。
