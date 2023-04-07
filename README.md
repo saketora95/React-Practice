@@ -290,6 +290,54 @@ compoment_2.render(
 2. props 帶有唯獨的特性
     - 因此無法使用 `this.props.someThing = someData;` 這種方式直接變更。
 
+接著，props 也可以用來綁定函數：
+```
+// 觸發時更改 show-area 的文字
+const printMessage = () => {
+    document.getElementById('show-area').innerHTML = 'Nice click !';
+}
+
+// 透過 props 控制 onClick 與內部的文字
+function TestFuncProps(props) {
+    return (
+        <button onClick={ props.handleClick }> { props.text } </button>
+    );
+}
+
+// 與先前相同的 render 步驟，但追加了一個 div 供 printMessage 控制
+const compoment_3 = ReactDOM.createRoot(document.getElementById('compoment_3'));
+compoment_3.render(
+    <div>
+        <TestFuncProps text='Try to press here' handleClick={printMessage} />
+        <div id="show-area"></div>
+    </div>
+);
+```
+
+# React Children
+前面在使用 Compoment 的時候，都是以 `<SomeCompoment />` 在呼叫，但也有這種像 html 標籤的用法：
+```
+<SomeCompoment> ... </SomeCompoment>
+```
+經由這種方式呼叫 Compoment 的時候，內部的資料就會被視為 `Children`，而 Children 屬於 `props` 的一員，所以能夠以下述方式處理：
+```
+// Children 屬於 props 的一員，因此以 props.children 呼叫
+function TestChildren(props) {
+    return (
+        <button> { props.children } </button>
+    );
+}
+
+// 與先前相同的 render 步驟
+const compoment_4 = ReactDOM.createRoot(document.getElementById('compoment_4'));
+compoment_4.render(
+    <div>
+        // 包覆在 Compoment 標籤內的資料會成為 Children
+        <TestChildren> Text in index.js </TestChildren>
+    </div>
+);
+```
+
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
@@ -310,3 +358,5 @@ compoment_2.render(
 4. 2023-04-07 : 向後練習。
     - [【React.js入門 - 07】 function component](https://ithelp.ithome.com.tw/articles/10217021)
     - [【React.js入門 - 08】 用props綁定資料](https://ithelp.ithome.com.tw/articles/10217533)
+    - [【React.js入門 - 09】 用props綁定函式](https://ithelp.ithome.com.tw/articles/10218096)
+    - [【React.js入門 - 10】 夾在中間的props: children](https://ithelp.ithome.com.tw/articles/10218605)

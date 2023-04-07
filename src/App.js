@@ -15,7 +15,25 @@ function TestProps(props) {
     );
 }
 
-export {TestCompoment, TestProps};
+// Props with function
+const printMessage = () => {
+    document.getElementById('show-area').innerHTML = 'Nice click !';
+}
+
+function TestFuncProps(props) {
+    return (
+        <button onClick={ props.handleClick }> { props.text } </button>
+    );
+}
+
+// Children
+function TestChildren(props) {
+    return (
+        <button> { props.children } </button>
+    );
+}
+
+export {TestCompoment, TestProps, printMessage, TestFuncProps, TestChildren};
 
 // function App() {
 //   return (
