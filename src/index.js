@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
+import {TestCompoment, TestProps} from './App';
 
 // Normal render
 const render_1 = ReactDOM.createRoot(document.getElementById('render_1'));
@@ -119,7 +120,23 @@ render_7.render(
     testOnClickRender()
 );
 
+// Compoment
+const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
+compoment_1.render(
+    <div>
+        <TestCompoment/>
+        <TestCompoment/>
+        <TestCompoment/>
+    </div>
+);
 
+// Props
+const compoment_2 = ReactDOM.createRoot(document.getElementById('compoment_2'));
+compoment_2.render(
+    <div>
+        <TestProps name='Props 的 name' />
+    </div>
+);
 
 // Original Content -
 // import App from './App';

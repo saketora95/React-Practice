@@ -223,11 +223,79 @@ render_7.render(
 );
 ```
 
+# React Compoment
+Compoment 有元件的意思，當網頁中有多個項目是使用相同的元件，就可以提取出來使用 Compoment 來構成，這樣每次呼叫時只要呼叫同一個 Compoment 就能完成所需（注意：Compoment 名稱的首個字母必須為大寫）。
+```
+function TestCompoment() {
+    return (
+        <button>Btn - By Compoment</button>
+    );
+}
+
+const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
+compoment_1.render(
+    <div>
+        <TestCompoment/>
+        <TestCompoment/>
+        <TestCompoment/>
+    </div>
+);
+```
+上述這個段落就能使 compoment_1 這個元素底下冒出三個相同的按鈕。另外，因為能夠提取出來另外編寫，所以在檔案構成上也可以整理得更清晰，而要分開到不同檔案的話，需要另外準備 `export`，例如我在 `App.js` 檔案中編寫以下內容：
+```
+// 基本的 React 仍要 import
+import React from 'react';
+
+// Compoment 的內容
+function TestCompoment() { ... }
+
+// 編寫完成之後將其 export
+export default TestCompoment;
+```
+而在 `index.js` 中則是：
+```
+// 將需要的 Compoment import
+import TestCompoment from './App';
+
+// 與先前相同的 render 步驟
+const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
+compoment_1.render( ... );
+```
+要注意，如果單個 `.js` 檔案中，有多個項目需要 `export`，需要將 `default` 移除，並以 `{ ... }` 將其打包起來（import 沒有 `default` 的問題，但同樣要打包）：
+```
+export {TestCompoment, AnotherCompoment};
+import {TestCompoment, AnotherCompoment};
+```
+
+# React Props
+在 html 中，元素可能會帶有 attribute，例如 `id` 與 `value` 等；在 React 中，將 Compoment 內的所有可以用來控制的參數整合為一個物件 `props`，並且在呼叫 Compoment 的時候，可以將 props 作為參數傳遞進去：
+```
+function TestProps(props) {
+    return (
+        <button> { props.name } </button>
+    );
+}
+
+const compoment_2 = ReactDOM.createRoot(document.getElementById('compoment_2'));
+compoment_2.render(
+    <div>
+        <TestProps name='Props 的 name' />
+    </div>
+);
+```
+上述這段會使得 `TestProps` 所回傳的 `button` 中的文字，等同 `render` 時給予的 `name`，也就是 `Props 的 name`，要留意的是：
+1. props 內的資料當然也有型態
+    - 如果想要傳遞整數或布林值等型態，需要再以 `{ ... }` 將其包覆起來。
+    - 例如：`<TestProps value={123} />` 的 `value` 就會是整數型態。
+2. props 帶有唯獨的特性
+    - 因此無法使用 `this.props.someThing = someData;` 這種方式直接變更。
+
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
 3. [javascript - Deprecation notice: ReactDOM.render is no longer supported in React 18 - Stack Overflow](https://stackoverflow.com/questions/71668256/deprecation-notice-reactdom-render-is-no-longer-supported-in-react-18)
 4. [Fragments – React](https://zh-hant.reactjs.org/docs/fragments.html)
+5. [React 的 export default和export明明是兩兄弟，但卻不一樣。 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10232421)
 
 # 更新記錄
 1. 2023-03-31 : 初步建立。
@@ -239,3 +307,6 @@ render_7.render(
     - [【React.js入門 - 04】 HelloWorld! - 從ReactDOM開始](https://ithelp.ithome.com.tw/articles/10215459)
     - [【React.js入門 - 05】 JSX (上)](https://ithelp.ithome.com.tw/articles/10215841)
     - [【React.js入門 - 06】 JSX (下)](https://ithelp.ithome.com.tw/articles/10216468)
+4. 2023-04-07 : 向後練習。
+    - [【React.js入門 - 07】 function component](https://ithelp.ithome.com.tw/articles/10217021)
+    - [【React.js入門 - 08】 用props綁定資料](https://ithelp.ithome.com.tw/articles/10217533)
