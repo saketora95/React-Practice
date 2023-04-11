@@ -2,7 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import {TestCompoment, TestProps, printMessage, TestFuncProps, TestChildren} from './App';
+import {
+    TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
+    TestClass,
+} from './App';
 
 // Normal render
 const render_1 = ReactDOM.createRoot(document.getElementById('render_1'));
@@ -120,27 +123,27 @@ render_7.render(
     testOnClickRender()
 );
 
-// Compoment
-const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
-compoment_1.render(
+// Component
+const component_1 = ReactDOM.createRoot(document.getElementById('component_1'));
+component_1.render(
     <div>
-        <TestCompoment/>
-        <TestCompoment/>
-        <TestCompoment/>
+        <TestComponent/>
+        <TestComponent/>
+        <TestComponent/>
     </div>
 );
 
 // Props
-const compoment_2 = ReactDOM.createRoot(document.getElementById('compoment_2'));
-compoment_2.render(
+const component_2 = ReactDOM.createRoot(document.getElementById('component_2'));
+component_2.render(
     <div>
         <TestProps name='Props 的 name' />
     </div>
 );
 
 // Props with function
-const compoment_3 = ReactDOM.createRoot(document.getElementById('compoment_3'));
-compoment_3.render(
+const component_3 = ReactDOM.createRoot(document.getElementById('component_3'));
+component_3.render(
     <div>
         <TestFuncProps text='Try to press here' handleClick={printMessage} />
         <div id="show-area"></div>
@@ -148,22 +151,24 @@ compoment_3.render(
 );
 
 // Children
-const compoment_4 = ReactDOM.createRoot(document.getElementById('compoment_4'));
-compoment_4.render(
+const component_4 = ReactDOM.createRoot(document.getElementById('component_4'));
+component_4.render(
     <div>
         <TestChildren> Text in index.js </TestChildren>
     </div>
 );
 
-// Original Content -
-// import App from './App';
-// const root = ReactDOM.createRoot(document.getElementById('root'));
-// root.render(
-//   <React.StrictMode>
-//     <App />
-//     <h1> Hello world!</h1>
-//   </React.StrictMode>
-// );
+// Class Component
+var testName = 'Old Name';
+const changeName = () => {
+    testName = 'New Name';
+    console.log('func. changeName - End.');
+}
+
+const class_1 = ReactDOM.createRoot(document.getElementById('class_1'));
+class_1.render(
+    <TestClass name={ testName } handleClick={ changeName } />
+);
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

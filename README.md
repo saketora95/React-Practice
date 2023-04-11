@@ -72,7 +72,8 @@ testFunction
 2. ReactDOM 整理欲渲染內容
 3. 在指定的 div 上完成渲染
 
-透過以下的段落可以執行 `render()` 函數，執行後就會在 id 為 `root` 的 div 置入 `<h1>Hello world!</h1>` 的內容：
+### 實行 render()
+透過以下的段落可以執行 `render()` 函數，執行後就會在 id 為 `root` 的 div 置入內容：
 ```
 const render_1 = ReactDOM.createRoot(document.getElementById('render_1'));
 
@@ -82,14 +83,14 @@ render_1.render(
     </React.StrictMode>
 );
 ```
-此外，在 `參照資料 [1]` 裡面所提及的：
+### 舊版本編寫方式
+在 `參照資料 [1]` 中，提及下方這種編寫方式，但已經無法在 React 18 以及後續版本使用。
 ```
 ReactDOM.render(
     <h1> Hello world!</h1>,
     document.getElementById('root')
 );
 ```
-此寫法無法在 React 18 以及後續版本使用。
 
 # JSX 筆記
 1. JSX 具有可以將 html 語法作為參數傳遞的特性
@@ -223,52 +224,58 @@ render_7.render(
 );
 ```
 
-# React Compoment
-Compoment 有元件的意思，當網頁中有多個項目是使用相同的元件，就可以提取出來使用 Compoment 來構成，這樣每次呼叫時只要呼叫同一個 Compoment 就能完成所需（注意：Compoment 名稱的首個字母必須為大寫）。
+# React Component
+Component 有元件的意思，當網頁中有多個項目是使用相同的元件，就可以提取出來使用 Component 來構成，這樣每次呼叫時只要呼叫同一個 Component 就能完成所需（注意：Component 名稱的首個字母必須為大寫）。
 ```
-function TestCompoment() {
+function TestComponent() {
     return (
-        <button>Btn - By Compoment</button>
+        <button>Btn - By Component</button>
     );
 }
 
-const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
-compoment_1.render(
+const component_1 = ReactDOM.createRoot(document.getElementById('component_1'));
+component_1.render(
     <div>
-        <TestCompoment/>
-        <TestCompoment/>
-        <TestCompoment/>
+        <TestComponent/>
+        <TestComponent/>
+        <TestComponent/>
     </div>
 );
 ```
-上述這個段落就能使 compoment_1 這個元素底下冒出三個相同的按鈕。另外，因為能夠提取出來另外編寫，所以在檔案構成上也可以整理得更清晰，而要分開到不同檔案的話，需要另外準備 `export`，例如我在 `App.js` 檔案中編寫以下內容：
+上述這個段落就能使 component_1 這個元素底下冒出三個相同的按鈕。另外，因為能夠提取出來另外編寫，所以在檔案構成上也可以整理得更清晰。
+
+### export
+要分開到不同檔案的話，需要準備 `export`，例如我在 `App.js` 檔案中編寫以下內容：
 ```
 // 基本的 React 仍要 import
 import React from 'react';
 
-// Compoment 的內容
-function TestCompoment() { ... }
+// Component 的內容
+function TestComponent() { ... }
 
 // 編寫完成之後將其 export
-export default TestCompoment;
+export default TestComponent;
 ```
-而在 `index.js` 中則是：
+
+### import
+完成 `export` 之後，便在 `index.js` 中進行 `import`：
 ```
-// 將需要的 Compoment import
-import TestCompoment from './App';
+// 將需要的 Component import
+import TestComponent from './App';
 
 // 與先前相同的 render 步驟
-const compoment_1 = ReactDOM.createRoot(document.getElementById('compoment_1'));
-compoment_1.render( ... );
+const component_1 = ReactDOM.createRoot(document.getElementById('component_1'));
+component_1.render( ... );
 ```
-要注意，如果單個 `.js` 檔案中，有多個項目需要 `export`，需要將 `default` 移除，並以 `{ ... }` 將其打包起來（import 沒有 `default` 的問題，但同樣要打包）：
+### 複數項目 import 或 export
+如果單個 `.js` 檔案中，有多個項目需要 `export`，需要將 `default` 移除，並以 `{ ... }` 將其打包起來（import 沒有 `default` 的問題，但同樣要打包）：
 ```
-export {TestCompoment, AnotherCompoment};
-import {TestCompoment, AnotherCompoment};
+export {TestComponent, AnotherComponent};
+import {TestComponent, AnotherComponent};
 ```
 
 # React Props
-在 html 中，元素可能會帶有 attribute，例如 `id` 與 `value` 等；在 React 中，將 Compoment 內的所有可以用來控制的參數整合為一個物件 `props`，並且在呼叫 Compoment 的時候，可以將 props 作為參數傳遞進去：
+在 html 中，元素可能會帶有 attribute，例如 `id` 與 `value` 等；在 React 中，將 Component 內的所有可以用來控制的參數整合為一個物件 `props`，並且在呼叫 Component 的時候，可以將 props 作為參數傳遞進去：
 ```
 function TestProps(props) {
     return (
@@ -276,8 +283,8 @@ function TestProps(props) {
     );
 }
 
-const compoment_2 = ReactDOM.createRoot(document.getElementById('compoment_2'));
-compoment_2.render(
+const component_2 = ReactDOM.createRoot(document.getElementById('component_2'));
+component_2.render(
     <div>
         <TestProps name='Props 的 name' />
     </div>
@@ -305,8 +312,8 @@ function TestFuncProps(props) {
 }
 
 // 與先前相同的 render 步驟，但追加了一個 div 供 printMessage 控制
-const compoment_3 = ReactDOM.createRoot(document.getElementById('compoment_3'));
-compoment_3.render(
+const component_3 = ReactDOM.createRoot(document.getElementById('component_3'));
+component_3.render(
     <div>
         <TestFuncProps text='Try to press here' handleClick={printMessage} />
         <div id="show-area"></div>
@@ -315,11 +322,11 @@ compoment_3.render(
 ```
 
 # React Children
-前面在使用 Compoment 的時候，都是以 `<SomeCompoment />` 在呼叫，但也有這種像 html 標籤的用法：
+前面在使用 Component 的時候，都是以 `<SomeComponent />` 在呼叫，但也有這種像 html 標籤的用法：
 ```
-<SomeCompoment> ... </SomeCompoment>
+<SomeComponent> ... </SomeComponent>
 ```
-經由這種方式呼叫 Compoment 的時候，內部的資料就會被視為 `Children`，而 Children 屬於 `props` 的一員，所以能夠以下述方式處理：
+經由這種方式呼叫 Component 的時候，內部的資料就會被視為 `Children`，而 Children 屬於 `props` 的一員，所以能夠以下述方式處理：
 ```
 // Children 屬於 props 的一員，因此以 props.children 呼叫
 function TestChildren(props) {
@@ -329,14 +336,75 @@ function TestChildren(props) {
 }
 
 // 與先前相同的 render 步驟
-const compoment_4 = ReactDOM.createRoot(document.getElementById('compoment_4'));
-compoment_4.render(
+const component_4 = ReactDOM.createRoot(document.getElementById('component_4'));
+component_4.render(
     <div>
-        // 包覆在 Compoment 標籤內的資料會成為 Children
+        // 包覆在 Component 標籤內的資料會成為 Children
         <TestChildren> Text in index.js </TestChildren>
     </div>
 );
 ```
+
+# Class Component
+在 React 16.8 之前，`Class Component` 是唯一可以追蹤狀態與生命週期的 Component；但在後來，`Function Component` 加入了 Hooks 而幾乎與 Class Component 具有相同的功效，而使得 Function Component 成為主流（比較完整的說明請見「`參照資料 [6] ~ [7]`」）。
+
+透過以下段落，同樣能在 id 為 `class_1` 元素底下建置 `TestClass` 中包含的項目。
+```
+class TestClass extends React.Component {
+    render() {
+        return(
+            <div>
+                Hello world! - By Class
+            </div>
+        );
+    }
+}
+
+const class_1 = ReactDOM.createRoot(document.getElementById('class_1'));
+class_1.render(
+    <TestClass />
+);
+```
+### Constructor
+若要在一個 `class` 中宣告變數，需要將其放置在 `constructor()` 之中、`super()` 之後，並在變數名稱之前加上 `this` 關鍵字：
+```
+class TestClass extends React.Component {
+    constructor() {
+        super();
+        this.testValue = 100;
+    }
+
+    render() { ... }
+}
+```
+### props
+與 `Function Component` 相同，`Class Component` 也能引入 `props`，但在使用上需要再加上 `this` 關鍵字：
+```
+class TestClass extends React.Component {
+    constructor() {
+        super();
+    }
+
+    render() {
+        return(
+            <button onClick={ this.props.handleClick }> { this.props.name } </button>
+        );
+    }
+}
+
+var testName = 'Old Name';
+const changeName = () => {
+    testName = 'New Name';
+    console.log('func. changeName - End.');
+}
+
+const class_1 = ReactDOM.createRoot(document.getElementById('class_1'));
+class_1.render(
+    <TestClass name={ testName } handleClick={ changeName } />
+);
+```
+上述的段落雖然成功使用了 props，也能透過 `console.log` 確認到 `testName` 已經被變更，但由於 `Component` 僅有在 `props` 與 `state` 的值變更時才會更新，所以即使 `changeName` 正常執行，`TestClass` 的顯示內容也沒有變化。
+
 
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
@@ -344,6 +412,8 @@ compoment_4.render(
 3. [javascript - Deprecation notice: ReactDOM.render is no longer supported in React 18 - Stack Overflow](https://stackoverflow.com/questions/71668256/deprecation-notice-reactdom-render-is-no-longer-supported-in-react-18)
 4. [Fragments – React](https://zh-hant.reactjs.org/docs/fragments.html)
 5. [React 的 export default和export明明是兩兄弟，但卻不一樣。 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10232421)
+6. [React Class Components](https://www.w3schools.com/react/react_class.asp)
+7. [[week 22] 再探 React：Function component vs Class component - HackMD](https://hackmd.io/@Heidi-Liu/note-fe302-class-component)
 
 # 更新記錄
 1. 2023-03-31 : 初步建立。
@@ -360,3 +430,5 @@ compoment_4.render(
     - [【React.js入門 - 08】 用props綁定資料](https://ithelp.ithome.com.tw/articles/10217533)
     - [【React.js入門 - 09】 用props綁定函式](https://ithelp.ithome.com.tw/articles/10218096)
     - [【React.js入門 - 10】 夾在中間的props: children](https://ithelp.ithome.com.tw/articles/10218605)
+5. 2023-04-11 : 向後練習。
+    - [【React.js入門 - 11】 開始進入class component](https://ithelp.ithome.com.tw/articles/10219057)

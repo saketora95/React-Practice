@@ -1,10 +1,10 @@
-// import logo from './logo.svg';
 import './App.css';
+import React from 'react';
 
-// Compoment
-function TestCompoment() {
+// Component
+function TestComponent() {
     return (
-        <button>Btn - By Compoment</button>
+        <button>Btn - By Component</button>
     );
 }
 
@@ -33,25 +33,21 @@ function TestChildren(props) {
     );
 }
 
-export {TestCompoment, TestProps, printMessage, TestFuncProps, TestChildren};
+// Class Component
+class TestClass extends React.Component {
+    // constructor() {
+    //     super();
+    //     this.testValue = 100;
+    // }
 
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
+    render() {
+        return(
+            <button onClick={ this.props.handleClick }> { this.props.name } </button>
+        );
+    }
+}
+
+export {
+    TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
+    TestClass,
+};
