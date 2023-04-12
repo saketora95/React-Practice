@@ -68,7 +68,31 @@ function TestFuncComp() {
     );
 }
 
+// Fetch Test
+function TestFetch() {
+    const [repoName, setRepoName] = React.useState(null);
+
+    function executeFetch() {
+        fetch('https://api.github.com/users/saketora95/repos', {method: "GET"})
+        .then(res => res.json())
+        .then(data => {
+            setRepoName(data[0]['name']);
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+
+    return(
+        <React.Fragment>
+            <p> { (repoName === null) ? 'No data.' : repoName } </p>
+            <button onClick={ executeFetch }> 找找看 </button>
+        </React.Fragment>
+    );
+}
+
+
 export {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass, TestFuncComp
+    TestClass, TestFuncComp, TestFetch,
 };

@@ -1,38 +1,42 @@
 # 概要
 這是個人學習與練習 [React](https://zh-hant.reactjs.org/) 所使用的 Repo；由於仍在初學階段，可能包含諸多錯誤或疏漏。
+- 這個 README.md 兼當了我的學習筆記，因此非常得長。
+- 如果有特定想搜尋的段落，請透過 `Ctrl + F` 或查看目錄會比較快；但我想直接到搜尋引擎找會更快更完整 xD
 
-# 初步安裝 & 專案建立
+# 專案相關
+## 初步安裝 & 專案建立
 1. 安裝 [Node.js](https://nodejs.org/en)
 2. 於終端機透過指令 `npm install -g create-react-app` 安裝 create-react-app
     - 執行時遭遇 `npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap.` 的話，表示 tar 的版本過期，可以透過 `npm i tar` 更新。
 3. 於終端機透過指令 `create-react-app [專案名稱]` 建立專案
     - 專案名稱無法接受大寫的英文字母。
 
-# 啟動專案
+## 啟動專案
 1. 進入專案資料夾
 2. 於終端機透過指令 `npm start` 進入專案資料夾
 3. 當終端機出現 `You can now view [專案名稱] in the browser.` 以及一些相關資訊時，專案便啟動完畢
     - 此時若關閉終端機，專案也會隨之關閉。
 
-# 專案打包與部署
+## 專案打包 & 部署
 1. 進入專案資料夾
 2. 於終端機透過指令 `npm run build` 進行打包
 3. 執行結束後，專案資料夾下的 `build` 資料夾內，即包含了部屬所需要的文件
 
-# 測試部屬
+## 測試部屬
 1. 於終端機透過指令 `npm install -g serve` 安裝 serve
     - 已經安裝 `serve` 的人自然可以略過此一步驟。
 2. 進入專案資料夾
 3. 於終端機透過指令 `serve -s build` 測試部屬
 
-# 與他人協作
+## 與他人協作
 1. 避免將 `node_modules` 交付給他人
     - `node_modules` 資料夾中，儲存了下載來的套件，因此將整個資料夾交付給他人的話，相當冗贅。
 2. 透過 `package-lock.json` 讓對方自行下載必要套件
     - 同一目錄下的 `package-lock.json` 檔案，當中記錄了所下載的套件，將這個檔案交付給他人，並請對方自行下載，會便利許多。
     - 於終端機透過指令 `npm i` 即可安裝所需套件。
 
-# ES6 筆記
+# 撰寫技巧 & 整理
+## JavaScript ES6
 1. 以 `宣告型態 函數名稱 = (參數) => {}` 宣告函數的方式
 ```
 var testFunction = (A, B) => {
@@ -66,7 +70,7 @@ testFunction
 }))
 ```
 
-# render() 筆記
+## render()
 使用 `render()` 函數，可以在 .js 檔中，整理 html 的內容後再渲染進實際頁面中，大致流程如下：
 1. 將欲渲染內容放入 ReactDOM 之中
 2. ReactDOM 整理欲渲染內容
@@ -92,7 +96,7 @@ ReactDOM.render(
 );
 ```
 
-# JSX 筆記
+## JSX
 1. JSX 具有可以將 html 語法作為參數傳遞的特性
     - 因此延續 `render() 筆記` 的內容，在使用 `render()` 時可以引入函數：
 ```
@@ -224,7 +228,7 @@ render_7.render(
 );
 ```
 
-# React Component
+## React Component
 Component 有元件的意思，當網頁中有多個項目是使用相同的元件，就可以提取出來使用 Component 來構成，這樣每次呼叫時只要呼叫同一個 Component 就能完成所需（注意：Component 名稱的首個字母必須為大寫）。
 ```
 function TestComponent() {
@@ -274,7 +278,7 @@ export {TestComponent, AnotherComponent};
 import {TestComponent, AnotherComponent};
 ```
 
-# React Props
+### React Props
 在 html 中，元素可能會帶有 attribute，例如 `id` 與 `value` 等；在 React 中，將 Component 內的所有可以用來控制的參數整合為一個物件 `props`，並且在呼叫 Component 的時候，可以將 props 作為參數傳遞進去：
 ```
 function TestProps(props) {
@@ -321,7 +325,7 @@ component_3.render(
 );
 ```
 
-# React Children
+### React Children
 前面在使用 Component 的時候，都是以 `<SomeComponent />` 在呼叫，但也有這種像 html 標籤的用法：
 ```
 <SomeComponent> ... </SomeComponent>
@@ -345,7 +349,7 @@ component_4.render(
 );
 ```
 
-# Class Component
+## Class Component
 在 React 16.8 之前，`Class Component` 是唯一可以追蹤狀態與生命週期的 Component；但在後來，`Function Component` 加入了 Hooks 而幾乎與 Class Component 具有相同的功效，而使得 Function Component 成為主流（比較完整的說明請見「`參照資料 [6] ~ [7]`」）。
 
 透過以下段落，同樣能在 id 為 `class_1` 元素底下建置 `TestClass` 中包含的項目。
@@ -365,6 +369,7 @@ class_1.render(
     <TestClass />
 );
 ```
+
 ### Constructor
 若要在一個 `class` 中宣告變數，需要將其放置在 `constructor()` 之中、`super()` 之後，並在變數名稱之前加上 `this` 關鍵字：
 ```
@@ -377,6 +382,7 @@ class TestClass extends React.Component {
     render() { ... }
 }
 ```
+
 ### props
 與 `Function Component` 相同，`Class Component` 也能引入 `props`，但在使用上需要再加上 `this` 關鍵字：
 ```
@@ -437,6 +443,7 @@ class_1.render(
 );
 ```
 這樣一來，button 的預設文字會是 `Old Name Text`，而在按下按鈕後，會因為 `setState( ... )` 而更新為 `New Name Text`。
+
 ### setState( ... )
 延續上段，我比更先前還多設了一個變數，也就是 state 內部的 `text: 'Text'`；另一方面，在 `changeName()` 中，使用了 `setState( ... )` 卻沒有提到 `text`，但這並不會使得這個變數被移除。
 1. setState( ... ) 只會變更有提及的變數
@@ -501,7 +508,8 @@ this.setState(function(state, props) {
     };
 });
 ```
-# Function Component 與 useState( ... )
+
+## Function Component 與 useState( ... )
 Function Component 與 class 不同，沒有 `state` 的存在，但在 React 16.8 新增了 `Hook`（`useState` 便屬於 `Hook` 的一員），使編寫者不用透過 class 就能使用 state；下行透過使用 JavaScript 的 `解構賦值`，將 `useState` 的回傳值分配下去，實際效果為宣告了一個名為 `name` 的 state，並可以透過 `setName` 調整其值，而初始的值為 `Sake`：
 ```
 const [name, setName] = React.useState('Sake');
@@ -524,6 +532,104 @@ func_1.render(
 ### Hook 無法在迴圈、條件式（if）或是巢狀的 function 內呼叫。
 React 仰賴 `Hook` 被呼叫的順序；如果將 Hook 設置在這些環境下，不同次的 render 可能會有不同的 Hook 數量與呼叫順序，進而導致問題發生。詳細說明可見 `參照資料 [10]`。
 
+## Fetch API
+首先，`fetch` 是屬於 `Promise` 的函數，概要的架構如下：
+```
+fetch(
+    發送 request 的目標 url, { request 的內容 }
+)
+// 將 request 收到的內容轉化為 json 物件
+.then(res => res.json())
+// 將轉化完的資料作為參數 data 執行
+.then(data => {
+    ...
+})
+// 遭遇錯誤時執行
+.catch(err => {
+    ...
+})
+```
+
+### request 的內容
+1. method
+2. Content-Type
+```
+fetch(
+    發送 request 的目標 url, {
+        method: 'GET',
+        headers: new Headers({
+            'Content-type': 'application/json'
+        }
+    }
+)
+.then(res => res.json())
+.then(data => {
+    ...
+})
+.catch(err => {
+    ...
+})
+```
+
+3. body
+    - 使用 JSON 的話，只要加入 `body: JSON.stringify(data)` 就可以了。
+    - 使用 `x-www-form-urlencoded` 的話，需要經過前處理：
+```
+const data= { ... };
+const formData = Object.keys(data).map(
+    function (keyName) {
+        return encodeURIComponent(keyName) + '=' + encodeURIComponent(data[keyName])
+    }
+).join('&');
+
+fetch(
+    發送 request 的目標 url, {
+        method: 'GET',
+        body: formData,
+        headers: new Headers({
+            'Content-type': 'application/x-www-form-urlencoded'
+        })
+    }
+)
+.then( ... 後略 )
+```
+
+### 練習實作
+模仿 `參照資料 [1]` 中的目標，按下按鈕後可以取得特定使用者的 GitHub 中，依照英文字母排序第一的 Repo。
+```
+function TestFetch() {
+    // 透過 repoName 記錄要顯示的資料
+    const [repoName, setRepoName] = React.useState(null);
+
+    // 設置函數
+    function executeFetch() {
+        // 目標是我個人的 GitHub
+        fetch('https://api.github.com/users/saketora95/repos', {method: "GET"})
+        // 轉變資料的型態
+        .then(res => res.json())
+        // 資料處理完畢後，保留第一個 Repo 的名稱
+        .then(data => {
+            setRepoName(data[0]['name']);
+        })
+        .catch(e => {
+            console.log(e);
+        })
+    }
+
+    return(
+        <React.Fragment>
+            <p> { (repoName === null) ? 'No data.' : repoName } </p>
+            <button onClick={ executeFetch }> 找找看 </button>
+        </React.Fragment>
+    );
+}
+
+const fetch_test = ReactDOM.createRoot(document.getElementById('fetch_test'));
+fetch_test.render(
+    <TestFetch />
+);
+```
+練習成功，按下按鈕後，原本顯示 `No data.` 會變為 `GameDataColle`，也確實符合我的 GitHub 的狀況。
 
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
@@ -554,7 +660,8 @@ React 仰賴 `Hook` 被呼叫的順序；如果將 Hook 設置在這些環境下
     - [【React.js入門 - 10】 夾在中間的props: children](https://ithelp.ithome.com.tw/articles/10218605)
 5. 2023-04-11 : 向後練習。
     - [【React.js入門 - 11】 開始進入class component](https://ithelp.ithome.com.tw/articles/10219057)
-6. 2023-04-12 : 向後練習。
+6. 2023-04-12 : 向後練習與調整 README.md 的結構。
     - [【React.js入門 - 12】 state 與 詳解setState語法](https://ithelp.ithome.com.tw/articles/10219561)
     - [【React.js入門 - 13】 useState - 在function component用state](https://ithelp.ithome.com.tw/articles/10220063)
     - [【React.js入門 - 14】 Debug利器 : React-Developer-Tools](https://ithelp.ithome.com.tw/articles/10220526)
+    - [【React.js入門 - 15】 使用Http request - Fetch Api](https://ithelp.ithome.com.tw/articles/10221020)
