@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass,
+    TestClass, TestFuncComp,
 } from './App';
 
 // Normal render
@@ -159,15 +159,15 @@ component_4.render(
 );
 
 // Class Component
-var testName = 'Old Name';
-const changeName = () => {
-    testName = 'New Name';
-    console.log('func. changeName - End.');
-}
-
 const class_1 = ReactDOM.createRoot(document.getElementById('class_1'));
 class_1.render(
-    <TestClass name={ testName } handleClick={ changeName } />
+    <TestClass />
+);
+
+// Function Component
+const func_1 = ReactDOM.createRoot(document.getElementById('func_1'));
+func_1.render(
+    <TestFuncComp />
 );
 
 // If you want to start measuring performance in your app, pass a function

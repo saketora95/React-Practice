@@ -33,7 +33,7 @@
     - 於終端機透過指令 `npm i` 即可安裝所需套件。
 
 # ES6 筆記
-1. 以 `宣告型態 函式名稱 = (參數) => {}` 宣告函數的方式
+1. 以 `宣告型態 函數名稱 = (參數) => {}` 宣告函數的方式
 ```
 var testFunction = (A, B) => {
     return A + B;
@@ -403,7 +403,126 @@ class_1.render(
     <TestClass name={ testName } handleClick={ changeName } />
 );
 ```
-上述的段落雖然成功使用了 props，也能透過 `console.log` 確認到 `testName` 已經被變更，但由於 `Component` 僅有在 `props` 與 `state` 的值變更時才會更新，所以即使 `changeName` 正常執行，`TestClass` 的顯示內容也沒有變化。
+上述的段落雖然成功使用了 props，也能透過 `console.log` 確認到 `testName` 已經被變更，但由於 `Component` 僅有在 `props` 與 `state` 的值變更時才會更新，所以即使 `changeName` 正常執行，`TestClass` 的顯示內容也沒有變化。接著，改用 `state` 的值來設置按鈕上的文字：
+```
+class TestClass extends React.Component {
+
+    // 將原本獨立在外的變數宣告移動到了 constructor 內部，
+    // 並用 this.state 儲存。
+    // 此外，使用 this.changeName = this.changeName.bind(this) 綁定函數。
+    constructor() {
+        super();
+        this.state = {name: 'Old Name', text: 'Text'};
+        this.changeName = this.changeName.bind(this);
+    }
+
+    // 由於 state 具有唯讀的屬性，
+    // 需要透過 setState() 才能調整其中的值。
+    changeName() {
+        this.setState({name: 'New Name'});
+        console.log('func. changeName - End.');
+    }
+
+    // 調整 button 內的屬性以配合上述的調整。
+    render() {
+        return(
+            <button onClick={ this.changeName }> { this.state.name } { this.state.text } </button>
+        );
+    }
+}
+
+const class_1 = ReactDOM.createRoot(document.getElementById('class_1'));
+class_1.render(
+    <TestClass />
+);
+```
+這樣一來，button 的預設文字會是 `Old Name Text`，而在按下按鈕後，會因為 `setState( ... )` 而更新為 `New Name Text`。
+### setState( ... )
+延續上段，我比更先前還多設了一個變數，也就是 state 內部的 `text: 'Text'`；另一方面，在 `changeName()` 中，使用了 `setState( ... )` 卻沒有提到 `text`，但這並不會使得這個變數被移除。
+1. setState( ... ) 只會變更有提及的變數
+2. setState( ... ) 中，若包含未宣告的變數，則會建立出來
+3. 若要移除特定的 state 變數，則要使用 `[SomeVar]: undefined`
+```
+this.state = {name: 'Sake', height: 170};
+
+// 只影響 name，不影響 height
+this.setState({name: 'New Sake'});
+// → {name: 'New Sake', height: 170}
+
+// 未宣告的變數會被宣告出來
+this.setState({age: 28});
+// → {name: 'New Sake', height: 170, age: 28}
+
+// 使用 [SomeVar]: undefined 移除特定的變數
+this.setState({height: undefined});
+// → {name: 'New Sake', age: 28}
+```
+4. setState( ... ) 無法單獨調整物件的局部
+```
+this.state = {styleData: {weight: '80%', height: '60%'}};
+
+// 無法單獨調整物件的局部
+this.setState({styleData: {weight: '70%'}});
+// → {styleData: {weight: '70%'}}
+// → height 會完全消失
+```
+5. state 與 props 屬於非同步更新，緊接著讀取它們經常會取得變更前的數值
+    - 也因此，盡可能避開使用直接使用它們計算新值。
+```
+this.state = {name: 'Sake', height: 170};
+this.setState({name: 'New Sake'});
+console.log(this.state);
+// 經常還是原始值 → {name: 'Sake', height: 170}
+```
+6. 可以透過第二個參數來確保 setState( ... ) 已經完成變更
+```
+this.state = {name: 'Sake', height: 170};
+this.setState(
+    {name: 'New Sake'},
+    () => {
+        // 等候 setState 完成變更後才會執行
+        console.log(this.state);
+    }
+)
+// → {name: 'New Sake', height: 170}
+```
+7. 透過使用函數取代物件，來填入 setState( ... ) 的第一個參數
+    - 詳細內容請參考 `參照資料 [8]`。
+```
+// Arrow Function
+this.setState((state, props) => ({
+    counter: state.counter + props.increment
+}));
+
+// Normal Function
+this.setState(function(state, props) {
+    return {
+        counter: state.counter + props.increment
+    };
+});
+```
+# Function Component 與 useState( ... )
+Function Component 與 class 不同，沒有 `state` 的存在，但在 React 16.8 新增了 `Hook`（`useState` 便屬於 `Hook` 的一員），使編寫者不用透過 class 就能使用 state；下行透過使用 JavaScript 的 `解構賦值`，將 `useState` 的回傳值分配下去，實際效果為宣告了一個名為 `name` 的 state，並可以透過 `setName` 調整其值，而初始的值為 `Sake`：
+```
+const [name, setName] = React.useState('Sake');
+```
+結合其他部分，重現了前面例子中，按下按鈕後，按鈕文字會變成新的文字的效果：
+```
+function TestFuncComp() {
+    const [name, setName] = React.useState('Sake');
+
+    return(
+        <button onClick={ () => setName('New Sake') }> { name } </button>
+    );
+}
+
+const func_1 = ReactDOM.createRoot(document.getElementById('func_1'));
+func_1.render(
+    <TestFuncComp />
+);
+```
+### Hook 無法在迴圈、條件式（if）或是巢狀的 function 內呼叫。
+React 仰賴 `Hook` 被呼叫的順序；如果將 Hook 設置在這些環境下，不同次的 render 可能會有不同的 Hook 數量與呼叫順序，進而導致問題發生。詳細說明可見 `參照資料 [10]`。
 
 
 # 參照資料
@@ -414,6 +533,9 @@ class_1.render(
 5. [React 的 export default和export明明是兩兄弟，但卻不一樣。 - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10232421)
 6. [React Class Components](https://www.w3schools.com/react/react_class.asp)
 7. [[week 22] 再探 React：Function component vs Class component - HackMD](https://hackmd.io/@Heidi-Liu/note-fe302-class-component)
+8. [State 和生命週期 – React](https://zh-hant.reactjs.org/docs/state-and-lifecycle.html)
+9. [使用 State Hook – React](https://zh-hant.reactjs.org/docs/hooks-state.html)
+10. [Hook 的規則 – React](https://zh-hant.reactjs.org/docs/hooks-rules.html)
 
 # 更新記錄
 1. 2023-03-31 : 初步建立。
@@ -432,3 +554,7 @@ class_1.render(
     - [【React.js入門 - 10】 夾在中間的props: children](https://ithelp.ithome.com.tw/articles/10218605)
 5. 2023-04-11 : 向後練習。
     - [【React.js入門 - 11】 開始進入class component](https://ithelp.ithome.com.tw/articles/10219057)
+6. 2023-04-12 : 向後練習。
+    - [【React.js入門 - 12】 state 與 詳解setState語法](https://ithelp.ithome.com.tw/articles/10219561)
+    - [【React.js入門 - 13】 useState - 在function component用state](https://ithelp.ithome.com.tw/articles/10220063)
+    - [【React.js入門 - 14】 Debug利器 : React-Developer-Tools](https://ithelp.ithome.com.tw/articles/10220526)

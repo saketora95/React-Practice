@@ -35,19 +35,40 @@ function TestChildren(props) {
 
 // Class Component
 class TestClass extends React.Component {
-    // constructor() {
-    //     super();
-    //     this.testValue = 100;
-    // }
+    constructor() {
+        super();
+        this.state = {name: 'Old Name', text: 'Text'};
+        this.changeName = this.changeName.bind(this);
+    }
+
+    changeName() {
+        this.setState(function(state, props) {
+            return {
+                name: 'New Name' + this.state.text
+            };
+        });
+
+        // this.setState({name: 'New Name'});
+        console.log('func. changeName - End.');
+    }
 
     render() {
         return(
-            <button onClick={ this.props.handleClick }> { this.props.name } </button>
+            <button onClick={ this.changeName }> { this.state.name } { this.state.text } </button>
         );
     }
 }
 
+// Func component
+function TestFuncComp() {
+    const [name, setName] = React.useState('Sake');
+
+    return(
+        <button onClick={ () => setName('New Sake') }> { name } </button>
+    );
+}
+
 export {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass,
+    TestClass, TestFuncComp
 };
