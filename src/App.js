@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 // Component
 function TestComponent() {
@@ -91,8 +91,103 @@ function TestFetch() {
     );
 }
 
+// useEffect Test
+// componentDidMount    : 第一次渲染後唯一觸發的生命週期函數。
+// componentWillUnmount : 元件被移除時會呼叫一次的唯一生命週期函數。
+// componentDidUpdate   : 唯一也是最後在 DOM 真的被更新後執行的週期函數。
+
+function BankAcc(props) {
+    const [isGetData, setGetData] = React.useState(false);
+    const [owner, setOwner] = React.useState('');
+    const [isRightAgent, setRightAgent] = React.useState(false);
+
+    // 模擬取得資料時的延遲
+    // 等候 3 秒後，會設置帳戶持有者為「小美」
+    function ajaxSimulator() {
+        setTimeout(() => {
+            setGetData(true);
+            setOwner('小美');
+        }, 3000);
+    }
+
+    // 檢查代理人是不是「小張」
+    function checkAgent() {
+        if (props.agent === '小張') {
+            setRightAgent(true);
+        } else {
+            setRightAgent(false);
+        }
+    }
+
+    useEffect(() => {
+        // componentDidMount 和 componentDidUpdate
+        // 第一次渲染後觸發 & DOM 被更新後執行
+        document.getElementById("communicate").append("您好!");
+        ajaxSimulator();
+
+        return(()=>{
+            // componentWillUnmount
+            // 元件被移除時會呼叫
+            document.getElementById("communicate").innerHTML = "";
+        })
+    }, []);
+
+    useEffect(() => {
+        // componentDidMount 和 componentDidUpdate
+        checkAgent();
+
+    }, [props.agent]);
+
+    if (isRightAgent === false) {
+        return(
+            <div>不將資料提供給外部人士</div>
+        );
+    } else if (isGetData === false) {
+        return(
+            <div id="msg">資料讀取中 ...</div>
+        );
+    } else {
+        return(
+            <div id="msg">{ owner } 的帳戶餘額為 10,000 元。</div>
+        );
+    }
+}
+
+function UseEffectTest() {
+    const [agent, setAgent] = React.useState('小張');
+    const [allow, setAllow] = React.useState(true);
+
+    function changeAgent() {
+        if(agent === "小張") {
+            setAgent('小王');
+        }
+        else{
+            setAgent('小張');
+        }
+    }
+
+    // 透過「中斷/辦理手續」的按鈕控制
+    // 中斷後就會移除 BankAcc
+    function createBank() {
+        if(allow === true){
+            return <BankAcc agent={ agent }/>;
+        }
+    }
+
+    return(
+        <div>
+            { createBank() }
+            <div id="communicate"></div>
+            <button onClick={ changeAgent }>換一位辦理手續的客戶</button>
+            <button onClick={ () => { setAllow(!allow) } }>
+                { (allow === true) ? '中斷手續' : '辦理手續' }
+            </button>
+        </div>
+    );
+}
+
 
 export {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass, TestFuncComp, TestFetch,
+    TestClass, TestFuncComp, TestFetch, UseEffectTest,
 };

@@ -4,7 +4,7 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass, TestFuncComp, TestFetch,
+    TestClass, TestFuncComp, TestFetch, UseEffectTest,
 } from './App';
 
 // Normal render
@@ -174,6 +174,12 @@ func_1.render(
 const fetch_test = ReactDOM.createRoot(document.getElementById('fetch_test'));
 fetch_test.render(
     <TestFetch />
+);
+
+// Fetch
+const use_effect_test = ReactDOM.createRoot(document.getElementById('use_effect_test'));
+use_effect_test.render(
+    <UseEffectTest />
 );
 
 // If you want to start measuring performance in your app, pass a function

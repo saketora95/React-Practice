@@ -631,6 +631,128 @@ fetch_test.render(
 ```
 練習成功，按下按鈕後，原本顯示 `No data.` 會變為 `GameDataColle`，也確實符合我的 GitHub 的狀況。
 
+## Function Component 與 useEffect( ... )
+在 Class Component 的生命週期中，經常會使用到：
+- `componentDidMount` : 第一次渲染後唯一觸發的生命週期函數。
+- `componentWillUnmount` : 元件被移除時會呼叫一次的唯一生命週期函數。
+- `componentDidUpdate` : 唯一也是最後在 DOM 真的被更新後執行的週期函數。
+
+上述三個函數；而在 Function Component 中，透過 `useEffect( ... )` 將這三個函數整合了起來。
+
+`useEffect` 中使用兩個參數：
+- 第一個參數需要置入一個函數，對應 `componentDidMount` 或 `componentDidUpdate` 需要執行的項目。
+    - 置入的函數的回傳值也必須要是一個函數，對應到 `componentWillUnmount` 要執行的項目。
+- 第二個參數需要置入一個 Array，藉此定義哪些變數有所變化時，需要重新觸發這個 `useEffect`。
+    - 設置為空的 Array（`[]`）時，表示沒有任何變數的改變可以重新觸發 `useEffect`。
+```
+useEffect(() => {
+    // componentDidMount
+
+    return (() => {
+        // componentWillUnmount
+
+    });
+
+// 第二個參數是用來定義哪些變數有所變化時，需要重新觸發這個 useEffect
+}, []);
+```
+下方段落模擬一段帳戶持有者「小美」請代理人「小張」，前去確認銀行帳戶餘額的功能。
+```
+// componentDidMount    : 第一次渲染後唯一觸發的生命週期函數。
+// componentWillUnmount : 元件被移除時會呼叫一次的唯一生命週期函數。
+// componentDidUpdate   : 唯一也是最後在 DOM 真的被更新後執行的週期函數。
+
+function BankAcc(props) {
+    const [isGetData, setGetData] = React.useState(false);
+    const [owner, setOwner] = React.useState('');
+    const [isRightAgent, setRightAgent] = React.useState(false);
+
+    // 模擬取得資料時的延遲
+    // 等候 3 秒後，會設置帳戶持有者為「小美」
+    function ajaxSimulator() {
+        setTimeout(() => {
+            setGetData(true);
+            setOwner('小美');
+        }, 3000);
+    }
+
+    // 檢查代理人是不是「小張」
+    function checkAgent() {
+        if (props.agent === '小張') {
+            setRightAgent(true);
+        } else {
+            setRightAgent(false);
+        }
+    }
+
+    useEffect(() => {
+        // componentDidMount 和 componentDidUpdate
+        // 第一次渲染後觸發 & DOM 被更新後執行
+        document.getElementById("communicate").append("您好!");
+        ajaxSimulator();
+
+        return(()=>{
+            // componentWillUnmount
+            // 元件被移除時會呼叫
+            document.getElementById("communicate").innerHTML = "";
+        })
+    }, []);
+
+    useEffect(() => {
+        // componentDidMount 和 componentDidUpdate
+        checkAgent();
+
+    }, [props.agent]);
+
+    if (isRightAgent === false) {
+        return(
+            <div>不將資料提供給外部人士</div>
+        );
+    } else if (isGetData === false) {
+        return(
+            <div id="msg">資料讀取中 ...</div>
+        );
+    } else {
+        return(
+            <div id="msg">{ owner } 的帳戶餘額為 10,000 元。</div>
+        );
+    }
+}
+
+function UseEffectTest() {
+    const [agent, setAgent] = React.useState('小張');
+    const [allow, setAllow] = React.useState(true);
+
+    function changeAgent() {
+        if(agent === "小張") {
+            setAgent('小王');
+        }
+        else{
+            setAgent('小張');
+        }
+    }
+
+    // 透過「中斷/辦理手續」的按鈕控制
+    // 中斷後就會移除 BankAcc
+    function createBank() {
+        if(allow === true){
+            return <BankAcc agent={ agent }/>;
+        }
+    }
+
+    return(
+        <div>
+            { createBank() }
+            <div id="communicate"></div>
+            <button onClick={ changeAgent }>換一位辦理手續的客戶</button>
+            <button onClick={ () => { setAllow(!allow) } }>
+                { (allow === true) ? '中斷手續' : '辦理手續' }
+            </button>
+        </div>
+    );
+}
+```
+
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
@@ -665,3 +787,9 @@ fetch_test.render(
     - [【React.js入門 - 13】 useState - 在function component用state](https://ithelp.ithome.com.tw/articles/10220063)
     - [【React.js入門 - 14】 Debug利器 : React-Developer-Tools](https://ithelp.ithome.com.tw/articles/10220526)
     - [【React.js入門 - 15】 使用Http request - Fetch Api](https://ithelp.ithome.com.tw/articles/10221020)
+7. 2023-04-21 : 向後練習。
+    - [【React.js入門 - 16】 React生命週期(1/4): Mount(上)- 在渲染以前](https://ithelp.ithome.com.tw/articles/10221346)
+    - [【React.js入門 - 17】 React生命週期(2/4): Mount(下) - 應該多用的componentDidMount](https://ithelp.ithome.com.tw/articles/10221975)
+    - [【React.js入門 - 18】 React生命週期(3/4): Unmount - 只有componentWillUnmount](https://ithelp.ithome.com.tw/articles/10222490)
+    - [【React.js入門 - 19】 React生命週期(4/4): Update系列一次講完](https://ithelp.ithome.com.tw/articles/10222857)
+    - [【React.js入門 - 20】 useEffect - 在function component用生命週期](https://ithelp.ithome.com.tw/articles/10223344)
