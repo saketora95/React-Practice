@@ -186,7 +186,6 @@ function UseEffectTest() {
     );
 }
 
-
 export {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
     TestClass, TestFuncComp, TestFetch, UseEffectTest,

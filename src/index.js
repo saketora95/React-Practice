@@ -6,6 +6,8 @@ import {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
     TestClass, TestFuncComp, TestFetch, UseEffectTest,
 } from './App';
+import Parent from './Parent';
+import {ProgressBar, CombineBar} from './ProgressBar';
 
 // Normal render
 const render_1 = ReactDOM.createRoot(document.getElementById('render_1'));
@@ -176,10 +178,22 @@ fetch_test.render(
     <TestFetch />
 );
 
-// Fetch
+// useEffect
 const use_effect_test = ReactDOM.createRoot(document.getElementById('use_effect_test'));
 use_effect_test.render(
     <UseEffectTest />
+);
+
+// Parent
+const parent_test = ReactDOM.createRoot(document.getElementById('parent_test'));
+parent_test.render(
+    <Parent />
+);
+
+// Progress Bar
+const progress_bar = ReactDOM.createRoot(document.getElementById('Progress_bar'));
+progress_bar.render(
+    <CombineBar />
 );
 
 // If you want to start measuring performance in your app, pass a function
