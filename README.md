@@ -817,64 +817,72 @@ function Bar(props) {
     );
 }
 ```
-在完成後，我試著將其合併成一個 Function Component，看上去具有同樣的效果：
+
+## Custom Hook
+`Custom Hook` 可以將 Component 的邏輯提取出來，搬運到可重複使用的 function 中；除了必須以 `use` 作為函數的起頭之外，大致上沿用 `Hook` 的規定，且在 `Custom Hook` 中也能使用其他的 `Hook`。
+
+首先，沿用原本在原本在 `Bar`（以下範例更名成 `CustomHookBar`）處理遞增與遞減的 `useEffect` 以及記錄 render 次數與 Timeout 的 `useRef`，將其獨立寫成 `useRate`：
 ```
-function CombineBar(props) {
-    // 使用 useRef 判斷是否為第一次渲染
+function useRate(value) {
     const mounted = useRef();
-    // 由於 useRef 不會受到 re-render 的影響，因此使用 useRef 儲存 setTimeout
     const timeout_1 = useRef();
     const timeout_2 = useRef();
-    // 記錄目前進度條的數值
-    const [percent, setPercent] = useState(10);
-    // 記錄遞增/減時的目標數值
-    const [targetValue, setTargetValue] = useState(50);
+    const [rate, setRate] = useState(0);
 
     useEffect(() => {
         if (! mounted.current) {
-            // 首次渲染
-            // 初始化進度條的預設值
-            setPercent(percent);
-            // 已經經過首次渲染，調整 mounted 的值
+            setRate(value);
             mounted.current = true;
 
         } else {
-            // 後續的渲染
-            // 目前數值比目標數值還要大，進行遞減
-            if (percent > targetValue) {
-                // 如果遞增用的 Timeout 正在運作，將其清除
+            if (rate > value) {
                 if (timeout_1.current) {
                     clearTimeout(timeout_1.current);
                 }
-                // 設置遞減用的 Timeout
-                timeout_2.current = setTimeout( () => { setPercent(percent - 1) }, 20);
+                timeout_2.current = setTimeout( () => { setRate(rate - 1) }, 20);
 
-            // 目前數值比目標數值還要小，進行遞增
-            } else if (percent < targetValue) {
-                // 如果遞減用的 Timeout 正在運作，將其清除
+            } else if (rate < value) {
                 if (timeout_2.current) {
                     clearTimeout(timeout_2.current)
                 }
-                // 設置遞增用的 Timeout
-                timeout_1.current = setTimeout( () => { setPercent(percent + 1) }, 20);
+                timeout_1.current = setTimeout( () => { setRate(rate + 1) }, 20);
             }
         }
-    }, [targetValue, percent]);
+    }, [value, rate]);
 
-    // 如果在 button 直接設置 setTargetValue(90) 會產生反覆 re-render 的錯誤
-    // 因此要以 () => setTargetValue(90) 來設置
+    // 將處理完的數值回傳
+    return rate;
+}
+```
+接著，將 `CustomHookBar` 中獨立到 `useRate` 的段落刪除：
+```
+function CustomHookApp(props) {
+    const [value, setValue] = useState(10);
+
+    return(
+        <CustomHookBar value={ value } onClick={ (e) => { setValue(parseInt(e.target.value)) } } />
+    );
+}
+
+function CustomHookBar(props) {
+    // 不需要再 setState 了，使用剛剛設置的 useRate 即可
+    const percent = useRate(props.value);
+
     return(
         <React.Fragment>
             <div className="progress-back" style={{ backgroundColor: "rgba(0, 0, 0, 0.2)", width: "200px", height: "7px", borderRadius: "10px" }}>
                 <div className="progress-bar" style={{ backgroundColor: "#fe5196", width: percent.toString() + "%", height: "100%", borderRadius: "10px" }}></div>
             </div>
             目前比率: { percent.toFixed(0) }%
-            <button onClick={ () => setTargetValue(90) }>調整至 90%</button>
-            <button onClick={ () => setTargetValue(10) }>調整至 10%</button>
+            <button value={ 90 } onClick={ props.onClick }>調整至 90%</button>
+            <button value={ 10 } onClick={ props.onClick }>調整至 10%</button>
         </React.Fragment>
     );
 }
 ```
+至此，就完成使用 Custom Hook 重現先前的進度條的功能。
+
+
 
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
@@ -887,6 +895,7 @@ function CombineBar(props) {
 8. [State 和生命週期 – React](https://zh-hant.reactjs.org/docs/state-and-lifecycle.html)
 9. [使用 State Hook – React](https://zh-hant.reactjs.org/docs/hooks-state.html)
 10. [Hook 的規則 – React](https://zh-hant.reactjs.org/docs/hooks-rules.html)
+11. [打造你自己的 Hook – React](https://zh-hant.legacy.reactjs.org/docs/hooks-custom.html)
 
 # 更新記錄
 1. 2023-03-31 : 初步建立。
@@ -920,3 +929,5 @@ function CombineBar(props) {
     - [【React.js入門 - 21】 各階層Component的溝通](https://ithelp.ithome.com.tw/articles/10223754)
     - [【React.js入門 - 22】 元件練習(上) - 在class利用遞迴+state實作動畫](https://ithelp.ithome.com.tw/articles/10224160)
     - [【React.js入門 - 23】 元件練習(下) - 在function利用useEffect遞迴+useState實作動畫](https://ithelp.ithome.com.tw/articles/10224560)
+9. 2023-04-23 : 向後練習。
+    - [【React.js入門 - 24】 Custom hook - 給我另一個超推React hook的理由](https://ithelp.ithome.com.tw/articles/10224881)

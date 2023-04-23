@@ -7,7 +7,7 @@ import {
     TestClass, TestFuncComp, TestFetch, UseEffectTest,
 } from './App';
 import Parent from './Parent';
-import {ProgressBar, CombineBar} from './ProgressBar';
+import {ProgressBar, CustomHookApp} from './ProgressBar';
 
 // Normal render
 const render_1 = ReactDOM.createRoot(document.getElementById('render_1'));
@@ -191,9 +191,15 @@ parent_test.render(
 );
 
 // Progress Bar
-const progress_bar = ReactDOM.createRoot(document.getElementById('Progress_bar'));
+const progress_bar = ReactDOM.createRoot(document.getElementById('progress_bar'));
 progress_bar.render(
-    <CombineBar />
+    <ProgressBar />
+);
+
+// Custom Hook Bar
+const custom_hook_bar = ReactDOM.createRoot(document.getElementById('custom_hook_bar'));
+custom_hook_bar.render(
+    <CustomHookApp />
 );
 
 // If you want to start measuring performance in your app, pass a function
