@@ -1,5 +1,10 @@
 import './App.css';
 import React, { useEffect } from 'react';
+import useBrowserSize from './useBrowserSize';
+import LoginForm from './LoginForm';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import FirstPage from './FirstPage';
+import SecondPage from './SecondPage';
 
 // Component
 function TestComponent() {
@@ -186,7 +191,38 @@ function UseEffectTest() {
     );
 }
 
+// Custom Hook Test
+function CustomHookTest() {
+    const device = useBrowserSize();
+
+    if (device === 'PC') {
+        return(<h1 style={{ color:"#FF0000" }}>PC</h1>);
+    } else if (device === 'tablet') {
+        return(<h1 style={{ color:"#00FF00" }}>Tablet</h1>);
+    } else {
+        return(<h1 style={{ color:"#0000FF" }}>Mobile</h1>);
+    }
+}
+
+// Login Form App
+function LoginFormApp() {
+    return(<LoginForm />);
+}
+
+// Router
+function RouterApp() {
+    return(
+        <BrowserRouter>
+            <Routes>
+                <Route exact path='/:id' element={ <FirstPage /> }/>
+                <Route exact path='/second/:id?' element={ <SecondPage /> }/>
+            </Routes>
+        </BrowserRouter>
+    );
+}
+
 export {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass, TestFuncComp, TestFetch, UseEffectTest,
+    TestClass, TestFuncComp, TestFetch, UseEffectTest, CustomHookTest,
+    LoginFormApp, RouterApp,
 };

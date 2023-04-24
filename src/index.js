@@ -4,7 +4,8 @@ import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {
     TestComponent, TestProps, printMessage, TestFuncProps, TestChildren,
-    TestClass, TestFuncComp, TestFetch, UseEffectTest,
+    TestClass, TestFuncComp, TestFetch, UseEffectTest, CustomHookTest,
+    LoginFormApp, RouterApp,
 } from './App';
 import Parent from './Parent';
 import {ProgressBar, CustomHookApp} from './ProgressBar';
@@ -200,6 +201,24 @@ progress_bar.render(
 const custom_hook_bar = ReactDOM.createRoot(document.getElementById('custom_hook_bar'));
 custom_hook_bar.render(
     <CustomHookApp />
+);
+
+// Custom Hook Bar
+const custom_hook_test = ReactDOM.createRoot(document.getElementById('custom_hook_test'));
+custom_hook_test.render(
+    <CustomHookTest />
+);
+
+// Login Form Test
+const login_form_app = ReactDOM.createRoot(document.getElementById('login_form_app'));
+login_form_app.render(
+    <LoginFormApp />
+);
+
+// Router App
+const router_app = ReactDOM.createRoot(document.getElementById('router_app'));
+router_app.render(
+    <RouterApp />
 );
 
 // If you want to start measuring performance in your app, pass a function

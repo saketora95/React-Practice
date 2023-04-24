@@ -882,7 +882,158 @@ function CustomHookBar(props) {
 ```
 至此，就完成使用 Custom Hook 重現先前的進度條的功能。
 
+### 練習實作
+練習實作一個可以即時顯示目前視窗大小屬於「PC」、「Tablet」或「Mobile」的元件。首先，透過 `Custom Hook` 建立 `useBrowserSize`：
+```
+function useBrowserSize() {
+    const [device, setDevice] = useState('mobile');
 
+    // 依據瀏覽器寬度，調整 device 的值
+    function handleBrowserSize() {
+        if (window.innerWidth > 768) {
+            setDevice('PC');
+
+        } else if ( window.innerWidth > 576) {
+            setDevice('tablet');
+
+        } else {
+            setDevice('mobile');
+        }
+    }
+
+    useEffect(() => {
+        // 監聽 resize 事件
+        window.addEventListener('resize', handleBrowserSize);
+
+        // 首次打開頁面時，因為沒有調整大小而不會觸發 resize
+        // 手動執行 handleBrowserSize 函數
+        handleBrowserSize();
+
+        // 元件移除時，也撤除監聽 resize 事件
+        return (() => {
+            window.removeEventListener('resize', handleBrowserSize);
+        });
+    }, []);
+
+    return device;
+}
+```
+之後，設置使用了前述 `useBrowserSize` 的 `CustomHookTest`：
+```
+function CustomHookTest() {
+    const device = useBrowserSize();
+
+    if (device === 'PC') {
+        return(<h1 style={{ color:"#FF0000" }}>PC</h1>);
+    } else if (device === 'tablet') {
+        return(<h1 style={{ color:"#00FF00" }}>Tablet</h1>);
+    } else {
+        return(<h1 style={{ color:"#0000FF" }}>Mobile</h1>);
+    }
+}
+
+const custom_hook_test = ReactDOM.createRoot(document.getElementById('custom_hook_test'));
+custom_hook_test.render(
+    <CustomHookTest />
+);
+```
+
+## React Router DOM
+### 安裝
+在終端機透過 `npm` 進行安裝：
+```
+npm i react-router-dom
+```
+
+### import
+在 React Router 中存在 `HashRouter` 與 `BrowserRouter` 兩種常見的 Router 介面：
+- `HashRouter` 的頁面路徑會多出一個 `#` 符號，並在 url 更換時 `不會` 發送 request。
+- `BrowserRouter` 的頁面路徑不會多出額外的符號，並在 url 更換時 `會` 發送 request。
+
+但在新版本中，官方（`參照資料 [12]`）已經強烈建議不要使用 `HashRouter` 了；在 import 上與先前的概念相同，並且通常會使用到 `Routes` 與 `Route`：
+```
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+```
+
+### 建置頁面 Component
+作為練習，先建立兩個 Component 來區分載入的頁面：
+```
+function FirstPage() {
+    const StyleSheet = {
+        width: '100vw',
+        height: '100vh',
+        backgroundColor: '#FF2E63',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        flexDirection: 'column'
+    }
+
+    return(
+        <div style={ StyleSheet }>
+            <h1 style={{ color:'white' }}>First Page</h1>
+        </div>
+    )
+}
+```
+另一個頁面簡單取名為 `SecondPage`，差在背景的顏色與顯示的文字內容是 `Second Page`。
+
+### 基本使用
+區分載入的 Component 設置完成後，初步的使用如下：
+```
+function RouterApp() {
+    return(
+        <BrowserRouter>
+            <Routes>
+                <Route path='/' element={ <FirstPage /> }/>
+                <Route path='/second' element={ <SecondPage /> }/>
+            </Routes>
+        </BrowserRouter>
+    );
+}
+```
+`path` 指的是對應連入的網址，而 `element` 則對應要載入的 Component。
+
+### exact
+上述使用方法下，如果連入 `http://localhost:3000/#/second` 會發現顯示出來的是 `FirstPage` 的內容；這是受到 `Route` 會偵測所有目前連入的網址中，有包含設定的 `path`，如果存在複數個，則會顯示第一個。因此這個情形下，`FirstPage` 與 `SecondPage` 都被偵測到了，所以顯示了第一個偵測到的 `FirstPage`。
+
+若要排除這個狀況，可以透過添加 `exact` 作為 props，可以促使偵測時必須完全符合才行：
+```
+function RouterApp() {
+    return(
+        <BrowserRouter>
+            <Routes>
+                <Route exact path='/' element={ <FirstPage /> }/>
+                <Route exact path='/second' element={ <SecondPage /> }/>
+            </Routes>
+        </BrowserRouter>
+    );
+}
+```
+
+### url 參數
+透過調整 `path` 可以設置使用者是否需要在網址列上提供參數。
+- `path='/:id'`：限制使用者一定得提供參數，否則不會導向。
+- `path='/second/:id?'`：使用者不一定需要提供參數，即使沒有提供也會導向。
+```
+<Route exact path='/:id' element={ <FirstPage /> }/>
+<Route exact path='/second/:id?' element={ <SecondPage /> }/>
+```
+之後，可以使用 `useParams` 來取得網址上的參數：
+```
+function FirstPage(props) {
+    const { id } = useParams();
+
+    const StyleSheet = { ... }
+
+    return(
+        <div style={ StyleSheet }>
+            <h1 style={{ color:'white' }}>First Page { id }</h1>
+        </div>
+    )
+}
+```
+在 `參照資料 [1]` 中，作者提及使用 `props.match.params.id` 取得參數，並且還有 `match` 的其他項目、`location` 與 `history` 的資料，但在 `react-router-dom 6` 中已經做了大幅度的變動，變更為要使用 `useParams` 和其他函數來取得資料。
 
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
@@ -896,6 +1047,8 @@ function CustomHookBar(props) {
 9. [使用 State Hook – React](https://zh-hant.reactjs.org/docs/hooks-state.html)
 10. [Hook 的規則 – React](https://zh-hant.reactjs.org/docs/hooks-rules.html)
 11. [打造你自己的 Hook – React](https://zh-hant.legacy.reactjs.org/docs/hooks-custom.html)
+12. [HashRouter v6.10.0 | React Router](https://reactrouter.com/en/main/router-components/hash-router)
+13. [reactjs - React - TypeError: Cannot read properties of undefined (reading 'params') - Stack Overflow](https://stackoverflow.com/questions/70290770/react-typeerror-cannot-read-properties-of-undefined-reading-params)
 
 # 更新記錄
 1. 2023-03-31 : 初步建立。
@@ -931,3 +1084,7 @@ function CustomHookBar(props) {
     - [【React.js入門 - 23】 元件練習(下) - 在function利用useEffect遞迴+useState實作動畫](https://ithelp.ithome.com.tw/articles/10224560)
 9. 2023-04-23 : 向後練習。
     - [【React.js入門 - 24】 Custom hook - 給我另一個超推React hook的理由](https://ithelp.ithome.com.tw/articles/10224881)
+10. 2023-04-24 : 向後練習。
+    - [【React.js入門 - 25】 監控瀏覽器長寬 - 以React hook實現](https://ithelp.ithome.com.tw/articles/10225184)
+    - [【React.js入門 - 26】 input使用、input與state的互動 (控制組件) 、其他輸入元素](https://ithelp.ithome.com.tw/articles/10225692)
+    - [【React.js入門 - 27】 我要更多更多的分頁 - react-router-dom (上)](https://ithelp.ithome.com.tw/articles/10226056)
