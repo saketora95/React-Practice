@@ -1035,6 +1035,81 @@ function FirstPage(props) {
 ```
 在 `參照資料 [1]` 中，作者提及使用 `props.match.params.id` 取得參數，並且還有 `match` 的其他項目、`location` 與 `history` 的資料，但在 `react-router-dom 6` 中已經做了大幅度的變動，變更為要使用 `useParams` 和其他函數來取得資料。
 
+### Link
+在一般的 html 中，通常會使用 `<a>` 導向不同頁面，但在多層的伺服器下建立專案時，`<a>` 會帶來一些困擾，轉為使用 `Link` 則能改善這些問題；首先，在 `FirstPage` 與 `SecondPage` 中添加導向到其他頁面的 `Link`：
+```
+import { Link, useParams } from 'react-router-dom';
+
+function FirstPage(props) {
+    const { id } = useParams();
+
+    const StyleSheet = { ... }
+
+    return(
+        <div style={ StyleSheet }>
+            <nav>
+                <Link to="/">點我連到第一頁</Link>
+                <Link to="/second" style={{ marginLeft: '20px' }}>點我連到第二頁</Link>
+            </nav>
+            <h1 style={{ color:'white' }}>First Page - { id }</h1>
+        </div>
+    )
+}
+```
+其次，調整在 `url 參數` 中設置的參數設定，將其移除或設定成非必要即可：
+```
+<Route exact path='/:id?' element={ <FirstPage /> }/>
+<Route exact path='/second/:id?' element={ <SecondPage /> }/>
+```
+
+## React 使用檔案
+### 圖片檔案 \<img\>
+在一般的 html 中，通常會使用 `<img src='./SomeImg.jpg' alt='Some Image'/>` 來設置圖片，但無法在 React 如此使用，常用的方法有以下兩種：
+- 透過 `import` 引入要使用的圖片檔案，之後便能像變數那樣使用：
+```
+import SomeImg from "./SomeImg.jpg";
+
+(略)
+    <img src={ SomeImg } alt='Some Image' />
+(略)
+```
+- 透過 `require` 直接引用圖片檔案：
+```
+<img src={ require('./SomeImg.jpg') } alt='Some Image' />
+```
+
+### .css 檔案
+在 `React Router DOM` 段落中，樣式是在 .js 檔案中完成的，而 React 也能將獨立出來的 .css 檔案引入；以同樣的 `FirstPage` 作為例子，將樣式獨立成 `Layout.css`（留意 .css 格式有所不同）：
+```
+.Layout {
+    width: 100vw;
+    height: 100vh;
+    background-color: #FF2E63;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+```
+接著 import 獨立的 .css 檔案、將不需要的 `StyleSheet` 撤除，並替 `div` 加上 `className` 即可：
+```
+import './Layout.css';
+
+function FirstPage(props) {
+    const { id } = useParams();
+
+    return(
+        <div className='Layout'>
+            <nav>
+                <Link to='/'>點我連到第一頁</Link>
+                <Link to='/second' style={{ marginLeft: '20px' }}>點我連到第二頁</Link>
+            </nav>
+            <h1 style={{ color:'white' }}>First Page - { id }</h1>
+        </div>
+    )
+}
+```
+
 # 參照資料
 1. [【React.js入門 - 01】 前言 & 環境設置(上) - iT 邦幫忙::一起幫忙解決難題，拯救 IT 人的一天](https://ithelp.ithome.com.tw/articles/10214942) 以及後續相同主題之文章
 2. [reactjs - npm WARN deprecated tar@2.2.2: This version of tar is no longer supported, and will not receive security updates. Please upgrade asap - Stack Overflow](https://stackoverflow.com/questions/68857411/npm-warn-deprecated-tar2-2-2-this-version-of-tar-is-no-longer-supported-and-w)
@@ -1088,3 +1163,8 @@ function FirstPage(props) {
     - [【React.js入門 - 25】 監控瀏覽器長寬 - 以React hook實現](https://ithelp.ithome.com.tw/articles/10225184)
     - [【React.js入門 - 26】 input使用、input與state的互動 (控制組件) 、其他輸入元素](https://ithelp.ithome.com.tw/articles/10225692)
     - [【React.js入門 - 27】 我要更多更多的分頁 - react-router-dom (上)](https://ithelp.ithome.com.tw/articles/10226056)
+    - [【React.js入門 - 28】 我要更多更多的分頁 - react-router-dom (下)](https://ithelp.ithome.com.tw/articles/10226370)
+    - [【React.js入門 - 29】 使用圖片、使用css檔、新手容易遇到的問題](https://ithelp.ithome.com.tw/articles/10226711)
+    - [【React.js入門 - 30】 學了React之後，然後呢?](https://ithelp.ithome.com.tw/articles/10227078)
+    - [後記 - 一個菜雞、胡言亂語](https://ithelp.ithome.com.tw/articles/10227386)
+11. 2023-04-24 22:50 結束。

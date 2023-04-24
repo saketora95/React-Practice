@@ -1,21 +1,16 @@
 import { Link, useParams } from 'react-router-dom';
+import './Layout.css';
 
 function FirstPage(props) {
     const { id } = useParams();
 
-    const StyleSheet = {
-        width: '100vw',
-        height: '100vh',
-        backgroundColor: '#FF2E63',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flexDirection: 'column'
-    }
-
     return(
-        <div style={ StyleSheet }>
-            <h1 style={{ color:'white' }}>First Page { id }</h1>
+        <div className='Layout'>
+            <nav>
+                <Link to='/'>點我連到第一頁</Link>
+                <Link to='/second' style={{ marginLeft: '20px' }}>點我連到第二頁</Link>
+            </nav>
+            <h1 style={{ color:'white' }}>First Page - { id }</h1>
         </div>
     )
 }

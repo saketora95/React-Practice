@@ -214,7 +214,7 @@ function RouterApp() {
     return(
         <BrowserRouter>
             <Routes>
-                <Route exact path='/:id' element={ <FirstPage /> }/>
+                <Route exact path='/:id?' element={ <FirstPage /> }/>
                 <Route exact path='/second/:id?' element={ <SecondPage /> }/>
             </Routes>
         </BrowserRouter>
